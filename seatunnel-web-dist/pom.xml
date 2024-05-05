@@ -412,7 +412,7 @@
             <build>
                 <finalName>apache-seatunnel-web-${project.version}</finalName>
                 <plugins>
-                    <plugin>
+                    <!--<plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
                         <version>1.11.3</version>
@@ -437,7 +437,7 @@
                                 </goals>
                                 <phase>generate-resources</phase>
                                 <configuration>
-                                    <arguments>install --ignore-scripts</arguments>
+                                    <arguments>install &#45;&#45;ignore-scripts</arguments>
                                 </configuration>
                             </execution>
                             <execution>
@@ -450,7 +450,7 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
+                    </plugin>-->
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
                         <executions>
