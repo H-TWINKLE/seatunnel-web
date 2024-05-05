@@ -18,22 +18,12 @@
 package org.apache.seatunnel.app.service.impl;
 
 import org.apache.seatunnel.api.configuration.ReadonlyConfig;
-import org.apache.seatunnel.api.table.catalog.CatalogTable;
-import org.apache.seatunnel.api.table.catalog.Column;
-import org.apache.seatunnel.api.table.catalog.PhysicalColumn;
-import org.apache.seatunnel.api.table.catalog.PrimaryKey;
-import org.apache.seatunnel.api.table.catalog.TableIdentifier;
-import org.apache.seatunnel.api.table.catalog.TableSchema;
+import org.apache.seatunnel.api.table.catalog.*;
 import org.apache.seatunnel.api.table.connector.TableTransform;
 import org.apache.seatunnel.api.table.factory.FactoryUtil;
-import org.apache.seatunnel.api.table.factory.TableFactoryContext;
 import org.apache.seatunnel.api.table.factory.TableTransformFactory;
-import org.apache.seatunnel.api.table.type.ArrayType;
-import org.apache.seatunnel.api.table.type.BasicType;
-import org.apache.seatunnel.api.table.type.DecimalType;
-import org.apache.seatunnel.api.table.type.LocalTimeType;
-import org.apache.seatunnel.api.table.type.SeaTunnelDataType;
-import org.apache.seatunnel.api.table.type.SeaTunnelRow;
+import org.apache.seatunnel.api.table.factory.TableTransformFactoryContext;
+import org.apache.seatunnel.api.table.type.*;
 import org.apache.seatunnel.app.domain.request.job.DatabaseTableSchemaReq;
 import org.apache.seatunnel.app.domain.request.job.PluginConfig;
 import org.apache.seatunnel.app.domain.request.job.TableSchemaReq;
@@ -42,23 +32,18 @@ import org.apache.seatunnel.app.service.IJobTaskService;
 import org.apache.seatunnel.app.service.ISchemaDerivationService;
 import org.apache.seatunnel.datasource.plugin.api.model.TableField;
 import org.apache.seatunnel.transform.sql.SQLTransform;
-
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class SchemaDerivationServiceImpl implements ISchemaDerivationService {
 
-    @Resource private IJobTaskService jobTaskService;
+    @Resource
+    private IJobTaskService jobTaskService;
 
     private static final Pattern decimalPattern = Pattern.compile("DECIMAL\\((\\d+), (\\d+)\\)");
 
@@ -103,8 +88,8 @@ public class SchemaDerivationServiceImpl implements ISchemaDerivationService {
                         tableSchema.getTableName());
         Map<String, Object> config = new HashMap<>();
         config.put(SQLTransform.KEY_QUERY.key(), sql.getQuery());
-        TableFactoryContext context =
-                new TableFactoryContext(
+        TableTransformFactoryContext context =
+                new TableTransformFactoryContext(
                         Collections.singletonList(table),
                         ReadonlyConfig.fromMap(config),
                         Thread.currentThread().getContextClassLoader());

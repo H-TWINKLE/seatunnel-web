@@ -16,16 +16,9 @@
  */
 package org.apache.seatunnel.app.bean.engine;
 
-import org.apache.seatunnel.api.table.catalog.DataTypeConvertException;
-import org.apache.seatunnel.api.table.catalog.DataTypeConvertor;
-import org.apache.seatunnel.api.table.type.ArrayType;
-import org.apache.seatunnel.api.table.type.BasicType;
-import org.apache.seatunnel.api.table.type.DecimalType;
-import org.apache.seatunnel.api.table.type.LocalTimeType;
-import org.apache.seatunnel.api.table.type.PrimitiveByteArrayType;
-import org.apache.seatunnel.api.table.type.SeaTunnelDataType;
-
 import lombok.Getter;
+import org.apache.seatunnel.api.table.catalog.DataTypeConvertor;
+import org.apache.seatunnel.api.table.type.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -72,8 +65,10 @@ public class EngineDataType {
         T_FLOAT_ARRAY("array<float>", ArrayType.FLOAT_ARRAY_TYPE),
         T_DOUBLE_ARRAY("array<double>", ArrayType.DOUBLE_ARRAY_TYPE);
 
-        @Getter private final String name;
-        @Getter private final SeaTunnelDataType<?> RawType;
+        @Getter
+        private final String name;
+        @Getter
+        private final SeaTunnelDataType<?> RawType;
 
         DataType(String name, SeaTunnelDataType<?> rawType) {
             this.name = name;
@@ -81,26 +76,26 @@ public class EngineDataType {
         }
     }
 
-    /** This convertor is used to transform the data type from engine to connector. */
+    /**
+     * This convertor is used to transform the data type from engine to connector.
+     */
     public static class SeaTunnelDataTypeConvertor
             implements DataTypeConvertor<SeaTunnelDataType<?>> {
 
         @Override
-        public SeaTunnelDataType<?> toSeaTunnelType(String engineDataType) {
-            return DATA_TYPE_MAP.get(engineDataType.toLowerCase(Locale.ROOT)).getRawType();
+        public SeaTunnelDataType<?> toSeaTunnelType(String s, String s1) {
+            return DATA_TYPE_MAP.get(s.toLowerCase(Locale.ROOT)).getRawType();
         }
 
         @Override
         public SeaTunnelDataType<?> toSeaTunnelType(
-                SeaTunnelDataType<?> seaTunnelDataType, Map<String, Object> map)
-                throws DataTypeConvertException {
+                String s, SeaTunnelDataType<?> seaTunnelDataType, Map<String, Object> map) {
             return seaTunnelDataType;
         }
 
         @Override
         public SeaTunnelDataType<?> toConnectorType(
-                SeaTunnelDataType<?> seaTunnelDataType, Map<String, Object> map)
-                throws DataTypeConvertException {
+                String s, SeaTunnelDataType<?> seaTunnelDataType, Map<String, Object> map) {
             return seaTunnelDataType;
         }
 

@@ -9,6 +9,10 @@
 ---
 [![EN doc](https://img.shields.io/badge/document-English-blue.svg)](README.md)
 
+## 源码编译】SeaTunnel-Web适配最新2.3.4版本教程
+
+https://mp.weixin.qq.com/s/Al1VmBoOKu2P02sBOTB6DQ  
+
 SeaTunnel的前身是Waterdrop，并于2021年10月12日更名为SeaTunnel。
 
 ---

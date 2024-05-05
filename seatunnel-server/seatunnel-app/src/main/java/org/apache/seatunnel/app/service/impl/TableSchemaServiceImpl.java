@@ -17,6 +17,7 @@
 
 package org.apache.seatunnel.app.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.seatunnel.api.table.catalog.DataTypeConvertor;
 import org.apache.seatunnel.api.table.factory.DataTypeConvertorFactory;
 import org.apache.seatunnel.api.table.type.SeaTunnelDataType;
@@ -37,23 +38,13 @@ import org.apache.seatunnel.plugin.discovery.PluginIdentifier;
 import org.apache.seatunnel.plugin.discovery.seatunnel.SeaTunnelSinkPluginDiscovery;
 import org.apache.seatunnel.server.common.SeatunnelErrorEnum;
 import org.apache.seatunnel.server.common.SeatunnelException;
-
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.annotation.Resource;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,9 +52,11 @@ import java.util.stream.Collectors;
 public class TableSchemaServiceImpl extends SeatunnelBaseServiceImpl
         implements ITableSchemaService {
 
-    @Resource private ConnectorCache connectorCache;
+    @Resource
+    private ConnectorCache connectorCache;
 
-    @Resource private ConnectorDataSourceMapperConfig connectorDataSourceMapperConfig;
+    @Resource
+    private ConnectorDataSourceMapperConfig connectorDataSourceMapperConfig;
 
     @Resource(name = "datasourceServiceImpl")
     private IDatasourceService dataSourceService;
@@ -72,11 +65,19 @@ public class TableSchemaServiceImpl extends SeatunnelBaseServiceImpl
 
     public TableSchemaServiceImpl() throws IOException {
         Common.setStarter(true);
-        Path path = new SeaTunnelSinkPluginDiscovery().getPluginDir();
-        if (path.toFile().exists()) {
-            List<URL> files = FileUtils.searchJarFiles(path);
-            files.addAll(FileUtils.searchJarFiles(Common.pluginRootDir()));
-            factory = new DataTypeConvertorFactory(new URLClassLoader(files.toArray(new URL[0])));
+        Set<PluginIdentifier> pluginIdentifiers =
+                SeaTunnelSinkPluginDiscovery.getAllSupportedPlugins(PluginType.SINK).keySet();
+        ArrayList<PluginIdentifier> pluginIdentifiersList = new ArrayList<>();
+        pluginIdentifiersList.addAll(pluginIdentifiers);
+        List<URL> pluginJarPaths =
+                new SeaTunnelSinkPluginDiscovery().getPluginJarPaths(pluginIdentifiersList);
+        //        Path path = new SeaTunnelSinkPluginDiscovery().getPluginDir();
+        if (!pluginJarPaths.isEmpty()) {
+            //            List<URL> files = FileUtils.searchJarFiles(path);
+            pluginJarPaths.addAll(FileUtils.searchJarFiles(Common.pluginRootDir()));
+            factory =
+                    new DataTypeConvertorFactory(
+                            new URLClassLoader(pluginJarPaths.toArray(new URL[0])));
         } else {
             factory = new DataTypeConvertorFactory();
         }
@@ -105,7 +106,8 @@ public class TableSchemaServiceImpl extends SeatunnelBaseServiceImpl
         }
 
         for (TableField field : tableSchemaReq.getFields()) {
-            SeaTunnelDataType<?> dataType = convertor.toSeaTunnelType(field.getType());
+            SeaTunnelDataType<?> dataType =
+                    convertor.toSeaTunnelType(field.getName(), field.getType());
             field.setType(dataType.toString());
         }
         TableSchemaRes res = new TableSchemaRes();
@@ -135,7 +137,8 @@ public class TableSchemaServiceImpl extends SeatunnelBaseServiceImpl
         }
         for (TableField field : tableFields) {
             try {
-                SeaTunnelDataType<?> dataType = convertor.toSeaTunnelType(field.getType());
+                SeaTunnelDataType<?> dataType =
+                        convertor.toSeaTunnelType(field.getName(), field.getType());
                 field.setUnSupport(false);
                 field.setOutputDataType(dataType.toString());
             } catch (Exception exception) {
