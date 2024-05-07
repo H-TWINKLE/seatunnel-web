@@ -69,6 +69,14 @@
             </includes>
             <outputDirectory>.</outputDirectory>
         </fileSet>
+        <!-- DISCLAIMER -->
+        <fileSet>
+            <directory>${basedir}/.././</directory>
+            <includes>
+                <include>run.bat</include>
+            </includes>
+            <outputDirectory>.</outputDirectory>
+        </fileSet>
     </fileSets>
     <dependencySets>
         <!-- =================== Third party dependency =========================  -->
