@@ -93,7 +93,8 @@ public class SeatunnelWebAdapter implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        registry.addResourceHandler("/ui/**").addResourceLocations("file:ui/");
+        //registry.addResourceHandler("/ui/**").addResourceLocations("file:ui/");
+        registry.addResourceHandler("/ui/**").addResourceLocations("classpath:ui/");
     }
 
     @Override

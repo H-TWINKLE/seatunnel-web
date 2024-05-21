@@ -47,6 +47,10 @@ connector-datasource-mapper:
       dataSources:
         - S3
 
+    Udp:
+      dataSources:
+        - Udp
+
     SqlServer-CDC:
       dataSources:
         - SqlServer-CDC
@@ -118,6 +122,11 @@ connector-datasource-mapper:
       sceneMode:
         - SINGLE_TABLE
 
+    Udp:
+      businessMode:
+        - DATA_INTEGRATION
+      sceneMode:
+        - SINGLE_TABLE
 
     SqlServer-CDC:
       businessMode:
